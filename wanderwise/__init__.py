@@ -1,14 +1,39 @@
-from flask import Flask, render_template, request
+"""Module initializing the WanderWise Flask App."""
 
-app = Flask(__name__)
+import os
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        field1 = request.form['field1']
-        field2 = request.form['field2']
-        return f'You entered: {field1} and {field2}'
-    return render_template('index.html')
+from flask import Flask
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
+def create_app(test_config=None):
+    """Creates and configures an instance of the Flask application.
+
+    Args:
+        test_config (flask.Config, optional): The test configuration. Defaults to None.
+
+    Returns:
+        flask.Flask: A configured Flask instance.
+    """
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_mapping(
+        # A default secret that should be overridden by instance config.
+        SECRET_KEY="dev"
+    )
+
+    if test_config is None:
+        # Load the instance config if it exists, when not testing.
+        app.config.from_pyfile("config.py", silent=True)
+    else:
+        # Load the test config if passed in.
+        app.config.update(test_config)
+
+    @app.route("/hello")
+    def hello():
+        """A simple function to print Hello World on the page.
+
+        Returns:
+            str: "Hello, World!" string for the page
+        """
+        return "Hello, World!"
+
+    return app
