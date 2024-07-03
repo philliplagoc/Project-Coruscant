@@ -1,0 +1,24 @@
+[project]
+name = "wanderwise"
+version = "0.0.1"
+authors = [
+    { name="Phillip Lagoc", email="philliplagoc@gmail.com" },
+]
+description = "An AI-powered trip planner built in Flask."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flask", 
+    "openai",
+    "langchain",
+    "langchain-community",
+    "langchain-core",
+    "langchain-openai"
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
