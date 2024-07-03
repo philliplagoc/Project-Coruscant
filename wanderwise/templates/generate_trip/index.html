@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Plan a Trip{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <label for="destination">Where to?</label>
+        <input name="destination" id="destination" value="{{ request.form['destination'] }}">
+        <input type="submit" value="Generate a Trip">
+    </form>
+{% endblock %}
