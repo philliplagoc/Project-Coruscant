@@ -36,4 +36,13 @@ def create_app(test_config=None):
         """
         return "Hello, World!"
 
+    # Apply Blueprints to the app.
+    from wanderwise import generate_trip
+
+    app.register_blueprint(generate_trip.bp)
+
+    # make url_for('index') == url_for('blog.index')
+    # since the generate_trip page is the main index.
+    app.add_url_rule("/", endpoint="index")
+
     return app
