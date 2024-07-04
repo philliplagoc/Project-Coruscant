@@ -27,15 +27,6 @@ def create_app(test_config=None):
         # Load the test config if passed in.
         app.config.update(test_config)
 
-    @app.route("/hello")
-    def hello():
-        """A simple function to print Hello World on the page.
-
-        Returns:
-            str: "Hello, World!" string for the page
-        """
-        return "Hello, World!"
-
     # Apply Blueprints to the app.
     from wanderwise import generate_trip
 
