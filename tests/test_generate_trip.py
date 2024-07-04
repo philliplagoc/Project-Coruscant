@@ -53,13 +53,14 @@ def test_index_post_empty(client):
 
     Args:
         client (flask.testing.FlaskClient): A test client that makes requests.
-    """    
-    response = client.post('/', data={'destination': ''})
+    """
+    response = client.post("/", data={"destination": ""})
     assert response.status_code == 200
-    
-    html = response.data.decode('utf-8')
-    assert 'Destination is required.' in html
+
+    html = response.data.decode("utf-8")
+    assert "Destination is required." in html
     assert '<form method="post">' in html
+
 
 def test_index_post_whitespace(client):
     """Tests if user submits whitespace as destination.
@@ -69,10 +70,10 @@ def test_index_post_whitespace(client):
 
     Args:
         client (flask.testing.FlaskClient): A test client that makes requests.
-    """    
-    response = client.post('/', data={'destination': '   '})
+    """
+    response = client.post("/", data={"destination": "   "})
     assert response.status_code == 200
-    
-    html = response.data.decode('utf-8')
-    assert 'Destination is required.' in html
+
+    html = response.data.decode("utf-8")
+    assert "Destination is required." in html
     assert '<form method="post">' in html
