@@ -4,6 +4,7 @@
 from flask import Blueprint
 from flask import render_template
 from flask import request
+from flask import flash
 
 # Create a Blueprint to collect all routes involved with generating
 # a trip itinerary using LLM.
@@ -20,6 +21,13 @@ def index():
     """
     # User entered a destination
     if request.method == "POST":
-        return f"You want to visit: {request.form["destination"]}"
+        destination = request.form["destination"].strip()
+
+        # Ensure that the user didn't send in an empty string.
+        if not destination:
+            flash("Destination is required.")
+            return render_template("generate_trip/index.html")
+
+        return f"You want to visit: {destination}"
     
     return render_template("generate_trip/index.html")
