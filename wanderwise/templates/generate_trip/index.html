@@ -19,4 +19,7 @@
       <input name="destination" id="destination" value="{{ request.form['destination'] }}" required>
       <input type="submit" value="Generate a Trip">
   </form>
+  {% if destination %}
+    <p>You want to visit: {{ destination }}</p>
+  {% endif %}
 {% endblock %}
