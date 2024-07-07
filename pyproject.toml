@@ -13,7 +13,9 @@ dependencies = [
     "langchain",
     "langchain-community",
     "langchain-core",
-    "langchain-openai"
+    "langchain-openai",
+    "python-dotenv",
+    "markdown
 ]
 
 [project.optional-dependencies]
