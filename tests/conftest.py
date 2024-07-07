@@ -2,6 +2,10 @@
 
 import pytest
 from wanderwise import create_app
+from dotenv import load_dotenv
+
+# Load environment variables.
+load_dotenv()
 
 
 @pytest.fixture
