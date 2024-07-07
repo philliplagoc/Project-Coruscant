@@ -1,17 +1,24 @@
 """Generates a trip itinerary using an LLM and user input.
 
 TODO:
-    - Complete TripStructure Class definition.
+    - Add "Advanced Settings" e.g. setting # of days, attractions to visit, restaurants, accommodations
+    - Adjust prompt to handle imaginary locations correctly
+    - Test generate_itinerary
+
+Nice to haves:
+    - Streaming output to screen
+    - Or a loading screen
 """
 
 import os
+import markdown
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
-from langchain_core.pydantic_v1 import BaseModel, Field
 from flask import Blueprint
 from flask import render_template
 from flask import request
 from flask import flash
+
 
 # Load environment variables.
 load_dotenv()
@@ -22,36 +29,73 @@ bp = Blueprint("generate_trip", __name__)
 llm = ChatOpenAI(
     openai_api_key=os.environ["OPENAI_API_KEY"],
     temperature=1,
-    model_name="gpt-4o",
+    model_name="gpt-4o"
 )
 """langchain_openai.ChatOpenAI: OpenAI LLM to generate trips with"""
 
-
-class TripStructure(BaseModel):
-    """Defines JSON structure for LLM output.
+def generate_itinerary(destination: str):
+    """Generates an itinerary given a destination.
 
     Args:
-        BaseModel (_type_): _description_
+        destination (str): Where to generate the itinerary.
 
-    Attributes:
-        attr1 (Field): Description of `attr1`.
-        attr2 (Field, optional): Description of `attr2`.
+    Returns:
+        str: The AI-planned itinerary.
+    """    
+    prompt = f"""
+    You are a highly skilled trip planner with extensive experience in organizing memorable weekend getaways across the globe.
 
+    **Destination:** `{destination}`
+
+    **Objective:** Craft a comprehensive itinerary for an unforgettable weekend in `{destination}`.
+
+    ### Itinerary Overview
+
+    **Day 1: Arrival and Exploration**
+    - **Morning:** 
+    - Arrival at `{destination}`, check-in at [Accommodation Name].
+    - Breakfast at [Restaurant Name], known for its [Specialty Dish].
+    - **Afternoon:** 
+    - Visit [Place of Interest #1], a must-see attraction because of its [Unique Feature].
+    - Lunch at [Restaurant Name], offering exquisite [Type of Cuisine] cuisine.
+    - **Evening:** 
+    - Explore [Local Market/Area], perfect for experiencing `{destination}`'s vibrant culture.
+    - Dinner at [Restaurant Name], a top pick for [Type of Cuisine] dishes.
+
+    **Day 2: Adventure and Leisure**
+    - **Morning:** 
+    - Start the day with an adventure activity at [Location], such as [Activity].
+    - Brunch at [Café Name], famous for its [Signature Dish].
+    - **Afternoon:** 
+    - Relaxing visit to [Park/Beach], including optional activities like [Activity #1, Activity #2].
+    - Snack at [Local Eatery], try the [Local Specialty].
+    - **Evening:** 
+    - Dinner at [Restaurant Name], renowned for its [Dish] and ambiance.
+    - Optional evening entertainment at [Venue], featuring [Type of Entertainment].
+
+    **Day 3: Culture and Departure**
+    - **Morning:** 
+    - Visit [Cultural Site], an iconic spot that offers insights into `{destination}`'s history.
+    - Breakfast at [Restaurant Name], where you can enjoy a leisurely meal before departure.
+    - **Afternoon:** 
+    - Last-minute shopping at [Shopping Area], perfect for souvenirs and local goods.
+    - Lunch at [Restaurant Name], a final taste of `{destination}` before heading home.
+
+    **Accommodations:**
+    - **Stay at:** [Hotel/Hostel Name], located in [Area], known for its [Feature, e.g., great views, central location, cozy atmosphere].
+
+    **Notes:**
+    - Adjust the schedule based on personal preferences and travel pace.
+    - Ensure to check the opening hours and any need for reservations in advance.
+    - Consider local transportation options for getting around efficiently.
+
+    This itinerary is designed to offer a blend of adventure, relaxation, and cultural exploration, ensuring a well-rounded and enriching weekend experience in `{destination}`.
     """
+    llm_response = llm.invoke(prompt).content
 
-    destination: str = Field(description="The trip's destination")
-    duration: int = Field(
-        description="The length of the trip in number of days"
-    )
-    trip_price: float = Field(
-        description="The total estimated price (in USD) for the trip"
-    )
-    attractions: list = Field(
-        description="A list of the attractions to visit during the trip"
-    )
-    transports: list = Field(
-        description="A list of the modes of transporation to take throughout the trip"
-    )
+    # Convert from Markdown to HTML
+    return markdown.markdown(llm_response)
+
 
 
 @bp.route("/", methods=("GET", "POST"))
@@ -63,6 +107,7 @@ def index():
         str: A rendered template of the index.html page.
     """
     destination = ""
+    base_itinerary = ""
     # User entered a destination
     if request.method == "POST":
         destination = request.form["destination"].strip()
@@ -70,5 +115,7 @@ def index():
         # Ensure that the user didn't send in an empty string.
         if not destination:
             flash("Destination is required.")
+        else:
+            base_itinerary = generate_itinerary(destination)
 
-    return render_template("generate_trip/index.html", destination=destination)
+    return render_template("generate_trip/index.html", destination=destination, base_itinerary=base_itinerary)
