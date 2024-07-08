@@ -1,8 +1,8 @@
 """Tests for setting up a test app and test client."""
 
 import pytest
-from wanderwise import create_app
 from dotenv import load_dotenv
+from wanderwise import create_app
 
 # Load environment variables.
 load_dotenv()
