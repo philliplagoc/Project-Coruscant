@@ -1,1 +1,1 @@
-# Project: Coruscant, an AI-assisted Trip Planner.
+# Wanderwise, an AI-assisted Trip Planner.
