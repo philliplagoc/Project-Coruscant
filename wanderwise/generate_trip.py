@@ -1,13 +1,4 @@
 """Generates a trip itinerary using an LLM and user input.
-
-TODO:
-    - Add "Advanced Settings" e.g. setting # of days, attractions to visit, restaurants, accommodations
-    - Adjust prompt to handle imaginary locations correctly
-    - Test generate_itinerary
-
-Nice to haves:
-    - Streaming output to screen
-    - Or a loading screen
 """
 
 import os
@@ -27,11 +18,22 @@ bp = Blueprint("generate_trip", __name__)
 """flask.Blueprint: Create generate_trip Blueprint."""
 
 llm = ChatOpenAI(
-    openai_api_key=os.environ["OPENAI_API_KEY"],
-    temperature=1,
-    model_name="gpt-4o"
+    openai_api_key=os.environ["OPENAI_API_KEY"], temperature=1, model_name="gpt-4o"
 )
 """langchain_openai.ChatOpenAI: OpenAI LLM to generate trips with"""
+
+
+def md_to_html(s: str) -> str:
+    """Converts a Markdown string into HTML
+
+    Args:
+        s (str): The string written in markdown.
+
+    Returns:
+        str: The string written in HTML.
+    """
+    return markdown.markdown(s)
+
 
 def generate_itinerary(destination: str):
     """Generates an itinerary given a destination.
@@ -41,7 +43,7 @@ def generate_itinerary(destination: str):
 
     Returns:
         str: The AI-planned itinerary.
-    """    
+    """
     prompt = f"""
     You are a highly skilled trip planner with extensive experience in organizing memorable weekend getaways across the globe.
 
@@ -93,9 +95,7 @@ def generate_itinerary(destination: str):
     """
     llm_response = llm.invoke(prompt).content
 
-    # Convert from Markdown to HTML
-    return markdown.markdown(llm_response)
-
+    return llm_response
 
 
 @bp.route("/", methods=("GET", "POST"))
@@ -117,5 +117,11 @@ def index():
             flash("Destination is required.")
         else:
             base_itinerary = generate_itinerary(destination)
+            # Convert from Markdown to HTML
+            base_itinerary = md_to_html(base_itinerary)
 
-    return render_template("generate_trip/index.html", destination=destination, base_itinerary=base_itinerary)
+    return render_template(
+        "generate_trip/index.html",
+        destination=destination,
+        base_itinerary=base_itinerary,
+    )
