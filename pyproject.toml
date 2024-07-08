@@ -15,8 +15,7 @@ dependencies = [
     "langchain-core",
     "langchain-openai",
     "python-dotenv",
-    "markdown
-]
+    "markdown"]
 
 [project.optional-dependencies]
 test = ["pytest"]
