@@ -44,8 +44,8 @@ def generate_itinerary(destination: str):
     Returns:
         str: The AI-planned itinerary.
     """
-    prompt = f"""
-    You are a highly skilled trip planner with extensive experience in organizing memorable weekend getaways across the globe.
+    prompt = f""" You are a highly skilled trip planner with extensive experience in organizing memorable weekend 
+    getaways across the globe.
 
     **Destination:** `{destination}`
 
@@ -83,15 +83,16 @@ def generate_itinerary(destination: str):
     - Last-minute shopping at [Shopping Area], perfect for souvenirs and local goods.
     - Lunch at [Restaurant Name], a final taste of `{destination}` before heading home.
 
-    **Accommodations:**
-    - **Stay at:** [Hotel/Hostel Name], located in [Area], known for its [Feature, e.g., great views, central location, cozy atmosphere].
+    **Accommodations:** - **Stay at:** [Hotel/Hostel Name], located in [Area], known for its [Feature, e.g., 
+    great views, central location, cozy atmosphere].
 
     **Notes:**
     - Adjust the schedule based on personal preferences and travel pace.
     - Ensure to check the opening hours and any need for reservations in advance.
     - Consider local transportation options for getting around efficiently.
 
-    This itinerary is designed to offer a blend of adventure, relaxation, and cultural exploration, ensuring a well-rounded and enriching weekend experience in `{destination}`.
+    This itinerary is designed to offer a blend of adventure, relaxation, and cultural exploration, ensuring a 
+    well-rounded and enriching weekend experience in `{destination}`.
     """
     llm_response = llm.invoke(prompt).content
 
