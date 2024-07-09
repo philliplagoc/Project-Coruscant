@@ -2,7 +2,9 @@
 <title>{% block title %}{% endblock %} - Wanderwise</title>
 <nav>
   <h1><a href="{{ url_for('index') }}">Wanderwise</a></h1>
- 
+  <ul>
+    <li><a href="{{ url_for('advanced_settings.show_advanced_settings') }}">Advanced Settings</a>
+  </ul>
 </nav>
 <section class="content">
   <header>
