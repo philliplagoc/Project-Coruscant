@@ -2,15 +2,11 @@
 """
 
 import os
+
 import markdown
 from dotenv import load_dotenv
+from flask import Blueprint, flash, render_template, request, session
 from langchain_openai import ChatOpenAI
-from flask import Blueprint
-from flask import render_template
-from flask import request
-from flask import flash
-from flask import session
-
 
 # Load environment variables.
 load_dotenv()
