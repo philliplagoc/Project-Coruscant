@@ -9,6 +9,7 @@ from flask import Blueprint
 from flask import render_template
 from flask import request
 from flask import flash
+from flask import session
 
 
 # Load environment variables.
@@ -107,6 +108,7 @@ def index():
     Returns:
         str: A rendered template of the index.html page.
     """
+    activities = session.get('saved_activities', '')
     destination = ""
     base_itinerary = ""
     # User entered a destination
@@ -125,4 +127,5 @@ def index():
         "generate_trip/index.html",
         destination=destination,
         base_itinerary=base_itinerary,
+        activities=activities
     )

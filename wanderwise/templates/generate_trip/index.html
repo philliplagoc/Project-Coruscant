@@ -1,25 +1,26 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Plan a Trip{% endblock %}</h1>
+    <h1>{% block title %}Plan a Trip{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul class="flashes">
-        {% for message in messages %}
-          <li>{{ message }}</li>
-            {% endfor %}
-      </ul>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <p>Desired Activities: {{ activities }}</p>
+    <form method="post">
+        <label for="destination">Where to?</label>
+        <input name="destination" id="destination" value="{{ request.form['destination'] }}" required>
+        <input type="submit" value="Generate a Trip">
+    </form>
+    {% if destination %}
+        {{ base_itinerary | safe }}
     {% endif %}
-  {% endwith %}
-  <form method="post">
-      <label for="destination">Where to?</label>
-      <input name="destination" id="destination" value="{{ request.form['destination'] }}" required>
-      <input type="submit" value="Generate a Trip">
-  </form>
-  {% if destination %}
-    {{ base_itinerary | safe }}
-  {% endif %}
 {% endblock %}

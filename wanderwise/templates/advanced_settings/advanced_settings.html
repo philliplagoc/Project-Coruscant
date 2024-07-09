@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1>{% block title %}Advanced Settings{% endblock %}</h1>
+    <h1>{% block title %}Advanced Settings{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <label for="activities">What would you like to do?</label>
+        <textarea name="activities" id="activities">{{ request.form['activities'] or session['saved_activities'] }}</textarea>
+        <input type="submit" value="Save">
+    </form>
 {% endblock %}
