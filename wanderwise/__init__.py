@@ -1,7 +1,5 @@
 """Module initializing the WanderWise Flask App."""
 
-import os
-
 from flask import Flask
 
 
@@ -29,8 +27,10 @@ def create_app(test_config=None):
 
     # Apply Blueprints to the app.
     from wanderwise import generate_trip
+    from wanderwise import advanced_settings
 
     app.register_blueprint(generate_trip.bp)
+    app.register_blueprint(advanced_settings.bp)
 
     # make url_for('index') == url_for('blog.index')
     # since the generate_trip page is the main index.
