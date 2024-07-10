@@ -8,6 +8,9 @@ from dotenv import load_dotenv
 from flask import Blueprint, flash, render_template, request, session
 from langchain_openai import ChatOpenAI
 
+from wanderwise.llm_prompts.itinerary_prompt import ITINERARY_PROMPT
+from wanderwise.llm_prompts.system_instructions import ITINERARY_SYSTEM_INSTRUCTIONS
+
 # Load environment variables.
 load_dotenv()
 
@@ -32,66 +35,28 @@ def md_to_html(s: str) -> str:
     return markdown.markdown(s)
 
 
-def generate_itinerary(destination: str):
-    """Generates an itinerary given a destination.
+def generate_itinerary(prompt):
+    """Generates an itinerary given a prompt.
 
     Args:
-        destination (str): Where to generate the itinerary.
+        prompt: Prompt for the trip. Includes the
+            destination, duration, and preferred activities.
 
     Returns:
         str: The AI-planned itinerary.
     """
-    prompt = f""" You are a highly skilled trip planner with extensive experience in organizing memorable weekend 
-    getaways across the globe.
-
-    **Destination:** `{destination}`
-
-    **Objective:** Craft a comprehensive itinerary for an unforgettable weekend in `{destination}`.
-
-    ### Itinerary Overview
-
-    **Day 1: Arrival and Exploration**
-    - **Morning:** 
-    - Arrival at `{destination}`, check-in at [Accommodation Name].
-    - Breakfast at [Restaurant Name], known for its [Specialty Dish].
-    - **Afternoon:** 
-    - Visit [Place of Interest #1], a must-see attraction because of its [Unique Feature].
-    - Lunch at [Restaurant Name], offering exquisite [Type of Cuisine] cuisine.
-    - **Evening:** 
-    - Explore [Local Market/Area], perfect for experiencing `{destination}`'s vibrant culture.
-    - Dinner at [Restaurant Name], a top pick for [Type of Cuisine] dishes.
-
-    **Day 2: Adventure and Leisure**
-    - **Morning:** 
-    - Start the day with an adventure activity at [Location], such as [Activity].
-    - Brunch at [Café Name], famous for its [Signature Dish].
-    - **Afternoon:** 
-    - Relaxing visit to [Park/Beach], including optional activities like [Activity #1, Activity #2].
-    - Snack at [Local Eatery], try the [Local Specialty].
-    - **Evening:** 
-    - Dinner at [Restaurant Name], renowned for its [Dish] and ambiance.
-    - Optional evening entertainment at [Venue], featuring [Type of Entertainment].
-
-    **Day 3: Culture and Departure**
-    - **Morning:** 
-    - Visit [Cultural Site], an iconic spot that offers insights into `{destination}`'s history.
-    - Breakfast at [Restaurant Name], where you can enjoy a leisurely meal before departure.
-    - **Afternoon:** 
-    - Last-minute shopping at [Shopping Area], perfect for souvenirs and local goods.
-    - Lunch at [Restaurant Name], a final taste of `{destination}` before heading home.
-
-    **Accommodations:** - **Stay at:** [Hotel/Hostel Name], located in [Area], known for its [Feature, e.g., 
-    great views, central location, cozy atmosphere].
-
-    **Notes:**
-    - Adjust the schedule based on personal preferences and travel pace.
-    - Ensure to check the opening hours and any need for reservations in advance.
-    - Consider local transportation options for getting around efficiently.
-
-    This itinerary is designed to offer a blend of adventure, relaxation, and cultural exploration, ensuring a 
-    well-rounded and enriching weekend experience in `{destination}`.
-    """
-    llm_response = llm.invoke(prompt).content
+    print(prompt)
+    messages = [
+        (
+            "system",
+            ITINERARY_SYSTEM_INSTRUCTIONS
+        ),
+        (
+            "human",
+            prompt
+        )
+    ]
+    llm_response = llm.invoke(messages).content
 
     return llm_response
 
@@ -105,6 +70,7 @@ def index():
         str: A rendered template of the index.html page.
     """
     activities = session.get('saved_activities', '')
+    duration = session.get("saved_duration", 6)  # TODO Implement in Advanced Settings
     destination = ""
     base_itinerary = ""
     # User entered a destination
@@ -115,7 +81,11 @@ def index():
         if not destination:
             flash("Destination is required.")
         else:
-            base_itinerary = generate_itinerary(destination)
+            # TODO Read in Advanced Settings and pass to prompt
+            prompt = ITINERARY_PROMPT.format(destination=destination,
+                                             duration=duration,
+                                             activities=activities)
+            base_itinerary = generate_itinerary(prompt)
             # Convert from Markdown to HTML
             base_itinerary = md_to_html(base_itinerary)
 
