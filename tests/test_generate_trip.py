@@ -2,7 +2,9 @@
 """
 
 from unittest.mock import Mock
+
 import pytest
+
 from wanderwise.generate_trip import generate_itinerary
 from wanderwise.generate_trip import md_to_html
 
@@ -37,7 +39,7 @@ def test_generate_itinerary(monkeypatch):
     # Check if the LLM was called with the correct prompt
     mock_llm.invoke.assert_called_once()
     prompt_arg = mock_llm.invoke.call_args[0][0]
-    assert "Paris" in prompt_arg
+    assert "Paris" in prompt_arg[1][1]  # Points to the "human" message in what's sent to LLM.
 
     expected = "Fake itinerary."
     assert result == expected
