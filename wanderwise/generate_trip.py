@@ -36,11 +36,11 @@ def md_to_html(s: str) -> str:
     return markdown.markdown(s)
 
 
-def generate_itinerary(prompt):
+def generate_itinerary(prompt: str) -> str:
     """Generates an itinerary given a prompt.
 
     Args:
-        prompt: Prompt for the trip. Includes the
+        prompt (str): Prompt for the trip. Includes the
             destination, duration, and preferred activities.
 
     Returns:
