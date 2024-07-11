@@ -1,32 +1,20 @@
-[project]
+[tool.poetry]
 name = "wanderwise"
 version = "0.0.1"
-authors = [
-    { name="Phillip Lagoc", email="philliplagoc@gmail.com" },
-]
-description = "An AI-powered trip planner built in Flask."
+description = "An AI-powered trip planner built with Flask."
+authors = ["Phillip Lagoc"]
 readme = "README.md"
-requires-python = ">=3.10"
-dependencies = [
-    "flask", 
-    "openai",
-    "langchain",
-    "langchain-community",
-    "langchain-core",
-    "langchain-openai",
-    "python-dotenv",
-    "markdown"]
 
-[project.optional-dependencies]
-test = ["pytest"]
+[tool.poetry.dependencies]
+python = "^3.10"
+Flask = "^3.0.3"
+python-dotenv = "^1.0.1"
+markdown = "^3.6"
+langchain-openai = "^0.1.15"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
 
 [build-system]
-requires = ["flit_core<4"]
-build-backend = "flit_core.buildapi"
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-
-[tool.coverage.run]
-branch = true
-source = ["wanderwise"]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
