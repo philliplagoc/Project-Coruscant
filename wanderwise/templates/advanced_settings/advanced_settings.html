@@ -8,6 +8,9 @@
     <form method="post">
         <label for="activities">What would you like to do?</label>
         <textarea name="activities" id="activities">{{ request.form['activities'] or session['saved_activities'] }}</textarea>
+        <br>
+        <label for="duration">How long are you planning to be on vacation?</label>
+        <textarea name="duration" id="duration">{{ request.form['duration'] or session['saved_duration'] }}</textarea>
         <input type="submit" value="Save">
     </form>
 {% endblock %}

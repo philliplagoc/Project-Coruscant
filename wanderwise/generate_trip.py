@@ -18,10 +18,11 @@ bp = Blueprint("generate_trip", __name__)
 """flask.Blueprint: Create generate_trip Blueprint."""
 
 llm = ChatOpenAI(
-    openai_api_key=os.environ["OPENAI_API_KEY"], temperature=1, model_name="gpt-4o"
+    openai_api_key=os.environ.get("OPENAI_API_KEY"),
+    temperature=1,
+    model_name="gpt-4o"
 )
 """langchain_openai.ChatOpenAI: OpenAI LLM to generate trips with"""
-
 
 def md_to_html(s: str) -> str:
     """Converts a Markdown string into HTML
@@ -69,8 +70,9 @@ def index():
     Returns:
         str: A rendered template of the index.html page.
     """
+    # Get the Advanced Settings from the user. Will be empty on initialization.
     activities = session.get('saved_activities', '')
-    duration = session.get("saved_duration", 6)  # TODO Implement in Advanced Settings
+    duration = session.get("saved_duration", 6)
     destination = ""
     base_itinerary = ""
     # User entered a destination
@@ -81,7 +83,6 @@ def index():
         if not destination:
             flash("Destination is required.")
         else:
-            # TODO Read in Advanced Settings and pass to prompt
             prompt = ITINERARY_PROMPT.format(destination=destination,
                                              duration=duration,
                                              activities=activities)

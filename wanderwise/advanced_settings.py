@@ -18,6 +18,10 @@ def show_advanced_settings():
     """
     if request.method == 'POST':
         session["saved_activities"] = request.form["activities"]
+        session['saved_duration'] = request.form['duration']
         return redirect(url_for('generate_trip.index'))
     activities = session.get('saved_activities', '')
-    return render_template('advanced_settings/advanced_settings.html', activities=activities)
+    duration = session.get('saved_duration', 6)
+    return render_template('advanced_settings/advanced_settings.html',
+                           activities=activities,
+                           duration=duration)
