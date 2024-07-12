@@ -24,6 +24,7 @@ llm = ChatOpenAI(
 )
 """langchain_openai.ChatOpenAI: OpenAI LLM to generate trips with"""
 
+
 def md_to_html(s: str) -> str:
     """Converts a Markdown string into HTML
 
@@ -70,12 +71,22 @@ def index():
     Returns:
         str: A rendered template of the index.html page.
     """
-    # Get the Advanced Settings from the user. Will be empty on initialization.
-    activities = session.get('saved_activities', '')
-    duration = session.get("saved_duration", 6)
+    # Get the Advanced Settings from the user.
+    activities = session.get('saved_activities', "I don't have any preferred activities.")  # TODO Fix magic string.
+
+    # Determine if user knows when their trip will take place.
+    if session.get('saved_toggle', False):
+        start_date = session.get('saved_start_date', '')
+        end_date = session.get('saved_end_date', '')
+        trip_length = f"I will be traveling from {start_date} to {end_date}."  # TODO Fix this magic string.
+    else:  # User didn't know dates, so chose a duration.
+        duration = session.get('saved_duration', 6)  # TODO Fix this magic number.
+        trip_length = f"I will be traveling for {duration} days."  # TODO Fix this magic string.
+
     destination = ""
     base_itinerary = ""
-    # User entered a destination
+
+    # User entered a destination.
     if request.method == "POST":
         destination = request.form["destination"].strip()
 
@@ -83,9 +94,10 @@ def index():
         if not destination:
             flash("Destination is required.")
         else:
+            # If the user knows when their trip will take place, format that into the prompt.
             prompt = ITINERARY_PROMPT.format(destination=destination,
-                                             duration=duration,
-                                             activities=activities)
+                                             activities=activities,
+                                             trip_length=trip_length)
             base_itinerary = generate_itinerary(prompt)
             # Convert from Markdown to HTML
             base_itinerary = md_to_html(base_itinerary)
@@ -94,5 +106,6 @@ def index():
         "generate_trip/index.html",
         destination=destination,
         base_itinerary=base_itinerary,
-        activities=activities
+        activities=activities,
+        trip_length=trip_length
     )

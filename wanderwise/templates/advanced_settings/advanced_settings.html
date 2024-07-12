@@ -2,15 +2,46 @@
 
 {% block header %}
     <h1>{% block title %}Advanced Settings{% endblock %}</h1>
+<script src="{{ url_for('static', filename='toggle_advanced_settings.js') }}"></script>
 {% endblock %}
 
 {% block content %}
+<p>Adjust your itinerary by answering the following questions. The AI will take this information into account and adjust
+    the generated itinerary accordingly.</p>
     <form method="post">
-        <label for="activities">What would you like to do?</label>
+        <!--        User selects their preferred activities.-->
+        <label for="activities">What activities would you like to do?</label>
         <textarea name="activities" id="activities">{{ request.form['activities'] or session['saved_activities'] }}</textarea>
+
         <br>
-        <label for="duration">How long are you planning to be on vacation?</label>
-        <textarea name="duration" id="duration">{{ request.form['duration'] or session['saved_duration'] }}</textarea>
-        <input type="submit" value="Save">
+
+        <!--        User selects whether they know when their trip will take place.-->
+        <label for="toggle">Do you know when your trip will take place? Check this box if you do. If you don't, move on
+            to the next question.</label>
+        <input id="toggle" name="toggle" type="checkbox"
+               value="{{ request.form['toggle'] or session['saved_toggle'] }}">
+
+        <!--        User knows when their trip takes place, so can choose a start and end date.-->
+        <div id="knows_date" style="display: none;">
+            <!--            TODO Validate calendar input-->
+            <label for="start_date">What's the start date?</label>
+            <input id="start_date" name="start_date" type="text"
+                   value="{{ request.form['start_date'] or session['saved_start_date'] }}">
+
+            <label for="end_date">What's the end date?</label>
+            <input id="end_date" name="end_date" type="text"
+                   value="{{ request.form['end_date'] or session['saved_end_date'] }}">
+        </div>
+
+        <!--        User doesn't know their trip dates, so can just choose a duration.-->
+        <div id="knows_duration" style="display: block;">
+            <label for="duration">How long will your trip be, in days? Default is 6 days.</label>
+            <input id="duration" name="duration" type="text"
+                   value="{{ request.form['duration'] or session['saved_duration'] }}">
+        </div>
+
+        <br>
+
+        <input type="submit" value="Submit">
     </form>
 {% endblock %}

@@ -3,7 +3,8 @@ from wanderwise.llm_prompts.base import Prompt
 
 ITINERARY_PROMPT = Prompt(
     """
-    I want to travel to {destination}. I will be staying there for {duration} days.
+    I want to travel to {destination}.
     {activities}
+    {trip_length}
     """
 )
