@@ -22,6 +22,8 @@ def md_string():
 def test_generate_itinerary(monkeypatch):
     """Tests generate_itinerary().
 
+    In other words, test the post request for index page.
+
     Args:
         monkeypatch (pytest.MonkeyPatch): Pytest fixture that changes the llm variable
                                           during testing.
@@ -43,6 +45,8 @@ def test_generate_itinerary(monkeypatch):
 
     expected = "Fake itinerary."
     assert result == expected
+
+    # TODO Test that prompt is formatted correctly when different arguments are provided.
 
 
 def test_md_to_html(md_string):

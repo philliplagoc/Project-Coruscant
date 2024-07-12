@@ -72,7 +72,12 @@ def index():
         str: A rendered template of the index.html page.
     """
     # Get the Advanced Settings from the user.
-    activities = session.get('saved_activities', "I don't have any preferred activities.")  # TODO Fix magic string.
+    activities = session.get('saved_activities',
+                             "").strip()
+    if activities == "":  # User didn't enter any activities.
+        activities = "I don't have any preferred activities."  # TODO Fix this magic string.
+    else:
+        activities = f"My preferred activities are: {activities}."  # TODO Fix this magic string.
 
     # Determine if user knows when their trip will take place.
     if session.get('saved_toggle', False):
