@@ -8,6 +8,8 @@ import pytest
 from wanderwise.generate_trip import generate_itinerary
 from wanderwise.generate_trip import md_to_html
 
+from flask import session
+
 
 @pytest.fixture
 def md_string():
@@ -47,6 +49,40 @@ def test_generate_itinerary(monkeypatch):
     assert result == expected
 
     # TODO Test that prompt is formatted correctly when different arguments are provided.
+
+
+def test_post_request_prompt_configuration(client, monkeypatch):
+    # Test data
+    test_destination = "Paris"
+    test_activities = "sightseeing, dining"
+    test_duration = "7"
+
+    # Mock the generate_itinerary function
+    def mock_generate_itinerary(prompt):
+        # Store the prompt for assertion
+        mock_generate_itinerary.prompt = prompt
+        return "Mocked itinerary"
+
+    monkeypatch.setattr('wanderwise.generate_trip.generate_itinerary', mock_generate_itinerary)
+
+    # Send POST request
+    response = client.post('/', data={
+        'destination': test_destination,
+        'activities': test_activities,
+        'duration': test_duration
+    })
+
+    # Assert response status code
+    assert response.status_code == 200
+
+    # Check if the prompt is correctly formatted
+    expected_prompt = """
+    I want to travel to Paris.
+    My preferred activities are: sightseeing, dining.
+    I will be traveling for 7 days.
+    """
+    print(str(mock_generate_itinerary.prompt))
+    # assert mock_generate_itinerary.prompt == expected_prompt
 
 
 def test_md_to_html(md_string):

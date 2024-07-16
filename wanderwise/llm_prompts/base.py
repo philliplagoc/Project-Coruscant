@@ -19,3 +19,12 @@ class Prompt:
             The formatted string (variables attached).
         """
         return self.template.format(**kwargs)
+
+    def to_string(self):
+        """
+        Returns the template as a string.
+
+        Returns:
+            The template as a string.
+        """
+        return self.template

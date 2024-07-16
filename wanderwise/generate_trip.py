@@ -8,7 +8,9 @@ from dotenv import load_dotenv
 from flask import Blueprint, flash, render_template, request, session
 from langchain_openai import ChatOpenAI
 
-from wanderwise.llm_prompts.itinerary_prompt import ITINERARY_PROMPT
+from wanderwise.llm_prompts.itinerary_prompt import (ITINERARY_PROMPT, NO_PREFERRED_ACTIVITIES_STRING,
+                                                     HAS_PREFERRED_ACTIVITIES_STRING, DEFAULT_DURATION,
+                                                     TRAVELING_DATES_STRING, TRAVELING_DURATION_STRING)
 from wanderwise.llm_prompts.system_instructions import ITINERARY_SYSTEM_INSTRUCTIONS
 
 # Load environment variables.
@@ -75,18 +77,18 @@ def index():
     activities = session.get('saved_activities',
                              "").strip()
     if activities == "":  # User didn't enter any activities.
-        activities = "I don't have any preferred activities."  # TODO Fix this magic string.
+        activities = NO_PREFERRED_ACTIVITIES_STRING
     else:
-        activities = f"My preferred activities are: {activities}."  # TODO Fix this magic string.
+        activities = HAS_PREFERRED_ACTIVITIES_STRING.format(activities=activities)
 
     # Determine if user knows when their trip will take place.
     if session.get('saved_toggle', False):
         start_date = session.get('saved_start_date', '')
         end_date = session.get('saved_end_date', '')
-        trip_length = f"I will be traveling from {start_date} to {end_date}."  # TODO Fix this magic string.
+        trip_length = TRAVELING_DATES_STRING.format(start_date=start_date, end_date=end_date)
     else:  # User didn't know dates, so chose a duration.
-        duration = session.get('saved_duration', 6)  # TODO Fix this magic number.
-        trip_length = f"I will be traveling for {duration} days."  # TODO Fix this magic string.
+        duration = session.get('saved_duration', DEFAULT_DURATION)
+        trip_length = TRAVELING_DURATION_STRING.format(duration=duration)
 
     destination = ""
     base_itinerary = ""
