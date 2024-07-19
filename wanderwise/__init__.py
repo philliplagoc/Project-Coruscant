@@ -26,10 +26,10 @@ def create_app(test_config=None):
         app.config.update(test_config)
 
     # Apply Blueprints to the app.
-    from wanderwise import generate_trip
+    from wanderwise import calendar
     from wanderwise import advanced_settings
 
-    app.register_blueprint(generate_trip.bp)
+    app.register_blueprint(calendar.bp)
     app.register_blueprint(advanced_settings.bp)
 
     # make url_for('index') == url_for('blog.index')

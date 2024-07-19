@@ -1,14 +1,12 @@
-"""Tests generate_trip.py.
+"""Tests calendar.py.
 """
 
 from unittest.mock import Mock
 
 import pytest
 
-from wanderwise.generate_trip import generate_itinerary
-from wanderwise.generate_trip import md_to_html
-
-from flask import session
+from wanderwise.calendar import generate_itinerary
+from wanderwise.calendar import md_to_html
 
 
 @pytest.fixture
@@ -35,7 +33,7 @@ def test_generate_itinerary(monkeypatch):
     mock_llm.invoke.return_value.content = "Fake itinerary."
 
     # Patch the LLM in the generate_itinerary function.
-    monkeypatch.setattr("wanderwise.generate_trip.llm", mock_llm)
+    monkeypatch.setattr("wanderwise.calendar.llm", mock_llm)
 
     # Test with a valid destination
     result = generate_itinerary("Paris")
@@ -63,7 +61,7 @@ def test_post_request_prompt_configuration(client, monkeypatch):
         mock_generate_itinerary.prompt = prompt
         return "Mocked itinerary"
 
-    monkeypatch.setattr('wanderwise.generate_trip.generate_itinerary', mock_generate_itinerary)
+    monkeypatch.setattr('wanderwise.calendar.generate_itinerary', mock_generate_itinerary)
 
     # Send POST request
     response = client.post('/', data={
