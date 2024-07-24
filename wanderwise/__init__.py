@@ -33,7 +33,7 @@ def create_app(test_config=None):
     app.register_blueprint(advanced_settings.bp)
 
     # make url_for('index') == url_for('blog.index')
-    # since the generate_trip page is the main index.
+    # since the calendar page is the main index.
     app.add_url_rule("/", endpoint="index")
 
     return app

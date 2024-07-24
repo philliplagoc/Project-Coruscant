@@ -20,6 +20,6 @@
         <input type="submit" value="Generate a Trip">
     </form>
     {% if destination %}
-        {{ base_itinerary | safe }}
+{{ user_itinerary | safe }}
     {% endif %}
 {% endblock %}

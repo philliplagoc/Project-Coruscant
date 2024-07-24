@@ -59,7 +59,7 @@ def show_advanced_settings():
         if error is not None:
             flash(error)
         else:
-            return redirect(url_for('generate_trip.index'))
+            return redirect(url_for('calendar.index'))
 
     activities = session.get('saved_activities', '')
     duration = session.get('saved_duration', 6)  # TODO Fix this magic number.
