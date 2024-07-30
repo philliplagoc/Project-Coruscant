@@ -63,8 +63,6 @@ def index():
             user_itinerary = generate_itinerary(destination=destination,
                                                 activities=activities,
                                                 trip_length=trip_length)
-            # Convert from Markdown to HTML
-            # user_itinerary = md_to_html(user_itinerary)
 
     return render_template(
         "calendar/index.html",

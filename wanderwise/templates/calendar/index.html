@@ -1,25 +1,116 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>{% block title %}Plan a Trip{% endblock %}</h1>
+<h1>{% block title %}Plan a Trip{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="flashes">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class="flashes">
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<form method="post">
+    <label for="destination">Where to?</label>
+    <input name="destination" id="destination" value="{{ request.form['destination'] }}" required>
+    <input type="submit" value="Generate a Trip">
+</form>
+{% if destination %}
+<div class="relative flex size-full min-h-screen flex-col bg-[#FFFFFF] group/design-root overflow-x-hidden"
+     style='font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;'>
+    <div class="layout-container flex h-full grow flex-col">
+        <div class="px-40 flex flex-1 justify-center py-5">
+            <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+                <div class="flex flex-wrap justify-between gap-3 p-4">
+                    <div class="flex min-w-72 flex-col gap-3">
+                        <p class="text-[#141414] tracking-light text-[32px] font-bold leading-tight">Destination</p>
+                        <p class="text-neutral-500 text-sm font-normal leading-normal">{{ destination }}</p>
+                    </div>
+                </div>
+                <!-- Iterate through each day in the Itinerary and print out the schedule -->
+                {% for day, day_schedule in user_itinerary.itinerary.items() %}
+
+                <!-- Day -->
+                <h2 class="text-[#141414] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">{{
+                    "Day {}".format(day)
+                    }}</h2>
+                <!--  Morning Block  -->
+                <div class="p-4">
+                    <div class="flex items-stretch justify-between gap-4 rounded-xl">
+                        <div class="flex flex-[2_2_0px] flex-col gap-4">
+                            <div class="flex flex-col gap-1">
+                                <p class="text-neutral-500 text-sm font-normal leading-normal">Morning</p>
+                                <p class="text-[#141414] text-base font-bold leading-tight">{{
+                                    day_schedule.morning_block.activity }}</p>
+                                <p class="text-neutral-500 text-sm font-normal leading-normal">{{
+                                    day_schedule.morning_block.activity_description }}</p>
+                                <p class="text-[#141414] text-base font-bold leading-tight">{{
+                                    day_schedule.morning_block.dining }}</p>
+                                <p class="text-neutral-500 text-sm font-normal leading-normal">{{
+                                    day_schedule.morning_block.dining_description }}</p>
+                            </div>
+                        </div>
+                        <!-- Placeholder Image on the right-->
+                        <div
+                                class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl flex-1"
+                                style='background-image: url("https://cdn.usegalileo.ai/stability/6f95c19b-4070-4332-aaa2-4c776c673d6c.png");'
+                        ></div>
+                    </div>
+                </div>
+                <!--  Afternoon Block  -->
+                <div class="p-4">
+                    <div class="flex items-stretch justify-between gap-4 rounded-xl">
+                        <div class="flex flex-[2_2_0px] flex-col gap-4">
+                            <div class="flex flex-col gap-1">
+                                <p class="text-neutral-500 text-sm font-normal leading-normal">Afternoon</p>
+                                <p class="text-[#141414] text-base font-bold leading-tight">{{
+                                    day_schedule.afternoon_block.activity }}</p>
+                                <p class="text-neutral-500 text-sm font-normal leading-normal">{{
+                                    day_schedule.afternoon_block.activity_description }}</p>
+                                <p class="text-[#141414] text-base font-bold leading-tight">{{
+                                    day_schedule.afternoon_block.dining }}</p>
+                                <p class="text-neutral-500 text-sm font-normal leading-normal">{{
+                                    day_schedule.afternoon_block.dining_description }}</p>
+                            </div>
+                        </div>
+                        <div
+                                class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl flex-1"
+                                style='background-image: url("https://cdn.usegalileo.ai/stability/18224d41-cf39-46d3-8692-7d48d5123e86.png");'
+                        ></div>
+                    </div>
+                </div>
+                <!--  Evening Block  -->
+                <div class="p-4">
+                    <div class="flex items-stretch justify-between gap-4 rounded-xl">
+                        <div class="flex flex-[2_2_0px] flex-col gap-4">
+                            <div class="flex flex-col gap-1">
+                                <p class="text-neutral-500 text-sm font-normal leading-normal">Evening</p>
+                                <p class="text-[#141414] text-base font-bold leading-tight">{{
+                                    day_schedule.evening_block.activity }}</p>
+                                <p class="text-neutral-500 text-sm font-normal leading-normal">{{
+                                    day_schedule.evening_block.activity_description }}</p>
+                                <p class="text-[#141414] text-base font-bold leading-tight">{{
+                                    day_schedule.evening_block.dining }}</p>
+                                <p class="text-neutral-500 text-sm font-normal leading-normal">{{
+                                    day_schedule.evening_block.dining_description }}</p>
+                            </div>
+                        </div>
+                        <div
+                                class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl flex-1"
+                                style='background-image: url("https://cdn.usegalileo.ai/stability/c03c9763-2275-4e84-b53c-0beb38e9b034.png");'
+                        ></div>
+                    </div>
+                </div>
+
+
                 {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-    <form method="post">
-        <label for="destination">Where to?</label>
-        <input name="destination" id="destination" value="{{ request.form['destination'] }}" required>
-        <input type="submit" value="Generate a Trip">
-    </form>
-    {% if destination %}
-{{ user_itinerary | safe }}
-    {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

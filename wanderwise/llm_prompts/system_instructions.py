@@ -23,6 +23,7 @@ Each day should have the following format:
 - Dining
 
 ### Please keep the following in mind ###
+- {{X}} is the day of the trip. Start with "1" for the first day, "2" for the second, etc.
 - Adjust the activities based on user's personal preferences.
 - If you are unfamiliar with the travel destination given, do not give an itinerary,
 and instead say that you are unfamiliar with the travel destination.
